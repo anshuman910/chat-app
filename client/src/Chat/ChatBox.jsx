@@ -98,26 +98,41 @@ const ChatBox = (props) => {
   const classes = useStyles();
 
   useEffect(() => {
+    
+    
+    
+    const reloadMessages = () => {
+      if (props.scope === "Global Chat") {
+        getGlobalMessages().then((res) => {
+          setMessages(res);
+        });
+      } else if (props.scope !== null && props.conversationId !== null) {
+        getConversationMessages(props.user._id).then((res) => setMessages(res));
+      } else {
+        setMessages([]);
+      }
+    };
     reloadMessages();
     scrollToBottom();
-  }, [lastMessage, props.scope, props.conversationId]);
+
+  }, [lastMessage, props.scope, props.conversationId,getGlobalMessages,getConversationMessages]);
 
   useEffect(() => {
     const socket = socketIOClient(process.env.REACT_APP_API_URL);
     socket.on("messages", (data) => setLastMessage(data));
   }, []);
 
-  const reloadMessages = () => {
-    if (props.scope === "Global Chat") {
-      getGlobalMessages().then((res) => {
-        setMessages(res);
-      });
-    } else if (props.scope !== null && props.conversationId !== null) {
-      getConversationMessages(props.user._id).then((res) => setMessages(res));
-    } else {
-      setMessages([]);
-    }
-  };
+  // const reloadMessages = () => {
+  //   if (props.scope === "Global Chat") {
+  //     getGlobalMessages().then((res) => {
+  //       setMessages(res);
+  //     });
+  //   } else if (props.scope !== null && props.conversationId !== null) {
+  //     getConversationMessages(props.user._id).then((res) => setMessages(res));
+  //   } else {
+  //     setMessages([]);
+  //   }
+  // };
 
   const scrollToBottom = () => {
     chatBottom.current.scrollIntoView({ behavior: "smooth" });

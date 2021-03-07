@@ -53,7 +53,7 @@ const Conversations = (props) => {
 
   useEffect(() => {
     getConversations().then((res) => setConversations(res));
-  }, [newConversation]);
+  }, [newConversation,getConversations]);
 
   useEffect(() => {
     let socket = socketIOClient(process.env.REACT_APP_API_URL);
